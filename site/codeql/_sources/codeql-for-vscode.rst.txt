@@ -1,0 +1,49 @@
+CodeQL for Visual Studio Code
+=============================
+
+The CodeQL extension for Visual Studio Code adds rich language support for CodeQL and allows you to easily find problems in codebases.
+
+See the following help topics for more information:
+
+- :doc:`About CodeQL for Visual Studio Code
+  <codeql-for-vscode/procedures/about-codeql-for-vscode>`: CodeQL for Visual Studio
+  Code is an extension that lets you write, run, and test CodeQL queries in Visual
+  Studio Code.
+
+- :doc:`Setting up CodeQL in Visual Studio Code
+  <codeql-for-vscode/procedures/setting-up>`: You can install and configure 
+  the CodeQL extension in Visual Studio Code.
+
+
+- :doc:`Analyzing your projects
+  <codeql-for-vscode/procedures/using-extension>`: You can run queries on CodeQL
+  databases and view the results in Visual Studio Code.
+
+- :doc:`Exploring data flow with path queries
+  <codeql-for-vscode/procedures/exploring-paths>`: You can run CodeQL queries in
+  VS Code to help you track the flow of data through a program, highlighting
+  areas that are potential security vulnerabilities.  
+
+- :doc:`Testing CodeQL queries in Visual Studio Code
+  <codeql-for-vscode/procedures/testing-queries>`: You can run unit tests for
+  CodeQL queries using the Visual Studio Code extension.
+
+- :doc:`Customizing settings
+  <codeql-for-vscode/reference/settings>`: You can edit the settings for the 
+  CodeQL extension to suit your needs.
+
+- :doc:`Troubleshooting CodeQL for Visual Studio Code
+  <codeql-for-vscode/procedures/troubleshooting>`: You can use the detailed 
+  information written to the extension's log files if you need to troubleshoot problems.
+
+.. toctree::
+   :hidden:
+   :titlesonly:
+
+   codeql-for-vscode/procedures/about-codeql-for-vscode
+   codeql-for-vscode/procedures/setting-up
+   codeql-for-vscode/procedures/using-extension
+   codeql-for-vscode/procedures/exploring-paths
+   codeql-for-vscode/procedures/testing-queries
+   codeql-for-vscode/reference/settings
+   codeql-for-vscode/procedures/troubleshooting

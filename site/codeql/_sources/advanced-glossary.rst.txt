@@ -1,0 +1,18 @@
+Advanced glossary
+=================
+
+This topic defines some of the advanced terms used in the low-level plumbing
+commands. For information about the high-level concepts, see the ":doc:`CodeQL glossary
+<glossary>`."
+
+.. include:: glossary/bqrs-file.rst
+
+.. include:: glossary/dil.rst
+
+.. include:: glossary/codeql-database-schema.rst
+
+.. include:: glossary/qlo.rst
+
+.. include:: glossary/codeql-dataset.rst
+
+.. include:: glossary/trap-file.rst
