@@ -1,0 +1,1 @@
+# Filter out minified files
