@@ -5,6 +5,8 @@ on:
       download_branch:
         description: The branch to download the artifacts from
         required: true
+      download_path:
+        description: The path to unzip the downloaded artifact to
 
 jobs:
   build:
