@@ -11,7 +11,7 @@ jobs:
         github_token: ${{secrets.GITHUB_TOKEN}}
         workflow: __docs-generate-sphinx.yml
         branch: main
-        repo: https://github.com/github/semmle-code
+        repo: github/semmle-code
     - name: Check download 
       working-directory: '${{ github.workspace }}'
       run: ls -la	   
