@@ -1,0 +1,4 @@
+CodeQL CLI changelog
+====================
+
+The CodeQL CLI changelog has moved to the `CodeQL CLI binaries repository on GitHub <https://github.com/github/codeql-cli-binaries/blob/HEAD/CHANGELOG.md>`__.
