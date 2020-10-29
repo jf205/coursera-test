@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Delete existing docs folder
-      run: rm -r 
+      run: rm -r '${{ github.event.inputs.download_path }}'
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
       with:
