@@ -13,14 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Delete existing docs folder
+      run: rm -r 
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
-      with:
+      with: '${{ github.event.inputs.download_path }}'
         github_token: ${{secrets.DOWNLOAD_ARTIFACT}}
         workflow: __docs-generate-sphinx.yml
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code
-        path: site/test/ 
+        path: '${{ github.event.inputs.download_path }}' 
     - name: Check download 
       working-directory: '${{ github.workspace }}'
       run: ls -la
