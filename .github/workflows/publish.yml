@@ -8,7 +8,7 @@ jobs:
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
       with:
-        github_token: ${{secrets.GITHUB_TOKEN}}
+        github_token: ${{secrets.DOWNLOAD_ARTIFACT}}
         workflow: __docs-generate-sphinx.yml
         branch: main
         repo: github/semmle-code
