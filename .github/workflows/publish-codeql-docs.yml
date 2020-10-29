@@ -1,4 +1,4 @@
-name: Download artifact from another repo and publish
+name: Download and publish CodeQL docs artifact
 on:
   workflow_dispatch:
     inputs:
@@ -23,8 +23,7 @@ jobs:
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code
         path: '${{ github.event.inputs.download_path }}' 
-    - name: Check download 
-      working-directory: '${{ github.workspace }}'
-      run: ls -la
+    - name: Move artifact 
+      run: mv '${{ github.event.inputs.download_path }}'/artifact '${{ github.event.inputs.download_path }}'
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
