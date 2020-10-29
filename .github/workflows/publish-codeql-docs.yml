@@ -1,4 +1,4 @@
-tname: Download and publish CodeQL docs artifact
+name: Download and publish CodeQL docs artifact
 on:
   workflow_dispatch:
     inputs:
