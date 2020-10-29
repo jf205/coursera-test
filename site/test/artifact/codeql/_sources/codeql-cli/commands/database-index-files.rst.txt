@@ -47,11 +47,8 @@ Options
 
 .. option:: --working-dir=<dir>
 
-   [Advanced] The directory in which the specified command should be
-   executed. If this argument is not provided, the command is executed in
-   the value of ``--source-root`` passed to :doc:`codeql database create
-   <database-create>`, if one exists. If no ``--source-root`` argument is
-   provided, the command is executed in the current working directory.
+   The directory in which the specified command should be executed. If
+   not specified, it defaults to the current working directory.
 
 Options for limiting the set of indexed files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
