@@ -1,0 +1,17 @@
+name: Download artifact from another repo and publish
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+- name: Download artifact
+  uses: dawidd6/action-download-artifact@v2
+  with:
+    github_token: ${{secrets.GITHUB_TOKEN}}
+    workflow: __docs-generate-sphinx.yml
+    branch: main
+    repo: https://github.com/github/semmle-code
+- name: Check download 
+  working-directory: '${{ github.workspace }}'
+  run: ls -la	   
