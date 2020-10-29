@@ -1,0 +1,19 @@
+CodeQL glossary
+===============
+
+An overview of the high-level terms and concepts in
+CodeQL. For more information about the advanced concepts used in CodeQL CLI
+commands, see the ":doc:`Advanced glossary <advanced-glossary>`."
+
+.. toctree::
+   :hidden:
+
+   advanced-glossary
+
+.. include:: glossary/codeql-database.rst
+
+.. include:: glossary/extractor.rst
+
+.. include:: glossary/sarif-file.rst
+
+.. include:: glossary/source-reference.rst
