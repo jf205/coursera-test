@@ -17,7 +17,7 @@ jobs:
       run: rm -r 
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
-      with: '${{ github.event.inputs.download_path }}'
+      with:
         github_token: ${{secrets.DOWNLOAD_ARTIFACT}}
         workflow: __docs-generate-sphinx.yml
         branch: '${{ github.event.inputs.download_branch }}'
