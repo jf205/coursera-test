@@ -1,0 +1,67 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="qldoc"><meta name="description" content="API documentation for CodeQL"><meta name="keywords" content="CodeQL,QL,Configuration"><meta name="addsearch-category" content="JavaScript CodeQL library"><title>Configuration</title><link rel="stylesheet" type="text/css" href="https://unpkg.com/@primer/css/dist/primer.css"><link rel="stylesheet" type="text/css" href="../../../../qldoc.css"><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5Q9DBRM');</script></head><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5Q9DBRM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div class="Header text-white"><div class="Header-item"><svg class="octicon octicon-mark-github mr-2" height="32" viewbox="0 0 16 16" width="32"><path fill-rule="even-odd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></div><div class="Header-item--full f2 text-bold">CodeQL library for JavaScript</div><div class="Header-item"><span>Version 1.26.0</span></div><div class="Header-item .text-gray-light"><div class="nav-section"><a href="../../../../index.html">Index</a></div></div><div class="Header-item"><a title="Search the CodeQL libraries" target="_blank" href="https://help.semmle.com/home/help/search-results-qldoc.html"><span class=".text-gray-light">Search</span></a></div></div><div id="main"><nav id="sidebar"><div id="sidebar-content" class="pt-2"><div class="nav-section"><p>For other CodeQL resources, including tutorials and examples, see <a href="https://help.semmle.com/QL/learn-ql/" class="learn-ql-link" target="_blank">Learning CodeQL</a><p>.</p></p><h2 class="section-heading"><a href="module.Configuration.html" class="ref-link ref-module">Configuration</a></h2><div class="doc-block"><ol class="section-links"><li></li><li></li><li><a href="module.Configuration.html#Import%20path">Import path</a></li><li><a href="module.Configuration.html#Classes">Classes</a></li><li><a href="module.Configuration.html#Modules">Modules</a></li><li><a href="module.Configuration.html#Aliases">Aliases</a></li></ol></div></div></div></nav><div class="overflow-y-auto width-full pt-2"><div id="content"><div><h1 class="section-heading" id="Configuration"><span><span>Module <span><a href="module.Configuration.html" class="ref-link ref-module" title="Module Configuration">Configuration</a></span></span></span></h1></div><div><div class="doc-block"><div class="qldoc"><p>Provides a class for performing customized inter-procedural data flow.</p>
+<p>The class in this module provides an interface for performing inter-procedural
+data flow from a custom set of source nodes to a custom set of sink nodes.
+Additional data flow edges can be specified, and conversely certain nodes or
+edges can be designated as <em>barriers</em> that block flow.</p>
+<p>NOTE: The API of this library is not stable yet and may change in
+the future.</p>
+<h1>Technical overview</h1>
+<p>This module implements a summarization-based inter-procedural data flow
+analysis. Data flow is tracked through local variables, imports and (some)
+object properties, as well as into and out of function calls. The latter
+is done by computing function summaries that record which function parameters
+and captured variables may flow into the function&rsquo;s return value.</p>
+<p>For example, for the function</p>
+<pre><code class="numbered-code"><span class="numbered-code-line">function choice(b, x, y) {
+</span><span class="numbered-code-line">  return b ? x : y;
+</span><span class="numbered-code-line">}
+</span></code></pre>
+<p>we determine that its second and third (but not the first) parameter may
+flow into its return value.</p>
+<p>Hence when we see a call <code>a = choice(b, c, d)</code>, we propagate flow from <code>c</code>
+to <code>a</code> and from <code>d</code> to <code>a</code> (but not from <code>b</code> to <code>a</code>).</p>
+<p>The inter-procedural data flow graph is represented by class <code>PathNode</code>
+and its member predicate <code>getASuccessor</code>. Each <code>PathNode</code> is a pair
+of an underlying <code>DataFlow::Node</code> and a <code>DataFlow::Configuration</code>, which
+can be accessed through member predicates <code>getNode</code> and <code>getConfiguration</code>,
+respectively.</p>
+<h1>Implementation details</h1>
+<p>Overall, flow is tracked forwards, starting at the sources and looking
+for an inter-procedural path to a sink.</p>
+<p>Function summaries are computed by predicate <code>flowThroughCall</code>.
+Predicate <code>flowStep</code> computes a &ldquo;one-step&rdquo; flow relation, where, however,
+a single step may be based on a function summary, and hence already involve
+inter-procedural flow.</p>
+<p>Flow steps are classified as being &ldquo;call&rdquo;, &ldquo;return&rdquo; or &ldquo;level&rdquo;: a call step
+goes from an argument to a parameter, an return step from a return to a caller,
+and a level step is either a step that does not involve function calls
+or a step through a summary.</p>
+<p>Predicate <code>reachableFromSource</code> computes inter-procedural paths from
+sources along the <code>flowStep</code> relation, keeping track of whether any of
+these steps is a call step. Return steps are only allowed if no previous
+step was a call step to avoid confusion between different call sites.</p>
+<p>Predicate <code>onPath</code> builds on <code>reachableFromSource</code> to compute full
+paths from sources to sinks, this time starting with the sinks. Similar
+to above, it keeps track of whether any of the steps from a node to a
+sink is a return step, and only considers call steps for paths that do
+not contain a return step.</p>
+<p>Finally, we build <code>PathNode</code>s for all nodes that appear on a path
+computed by <code>onPath</code>.</p>
+</div></div></div><div><h2 class="subsection-heading" id="Import path">Import path</h2><div class="doc-block"><code>import semmle.javascript.dataflow.Configuration</code></div></div><div><h2 class="subsection-heading" id="Classes">Classes</h2><div class="doc-block"><table><tbody><tr><td><a href="type.Configuration$AdditionalBarrierGuardNode.html" class="ref-link ref-type" title="Class DataFlow::AdditionalBarrierGuardNode">AdditionalBarrierGuardNode</a></td><td><span class="qldoc-summary"><p>A <code>BarrierGuardNode</code> that controls which data flow  configurations it is used in.</p>
+</span></td></tr><tr><td><a href="type.Configuration$AdditionalFlowStep.html" class="ref-link ref-type" title="Class DataFlow::AdditionalFlowStep">AdditionalFlowStep</a></td><td><span class="qldoc-summary"><p>A data flow edge that should be added to all data flow configurations in  addition to standard data flow edges.</p>
+</span></td></tr><tr><td><a href="type.Configuration$AdditionalSink.html" class="ref-link ref-type" title="Class DataFlow::AdditionalSink">AdditionalSink</a></td><td><span class="qldoc-summary"><p>A data flow node that should be considered a sink for some specific configuration,  in addition to any other sinks that configuration may recognize.</p>
+</span></td></tr><tr><td><a href="type.Configuration$AdditionalSource.html" class="ref-link ref-type" title="Class DataFlow::AdditionalSource">AdditionalSource</a></td><td><span class="qldoc-summary"><p>A data flow node that should be considered a source for some specific configuration,  in addition to any other sources that configuration may recognize.</p>
+</span></td></tr><tr><td><a href="type.Configuration$BarrierGuardNode.html" class="ref-link ref-type" title="Class DataFlow::BarrierGuardNode">BarrierGuardNode</a></td><td><span class="qldoc-summary"><p>A node that can act as a barrier when appearing in a condition.</p>
+</span></td></tr><tr><td><a href="type.Configuration$Configuration.html" class="ref-link ref-type" title="Class DataFlow::Configuration">Configuration</a></td><td><span class="qldoc-summary"><p>A data flow tracking configuration for finding inter-procedural paths from  sources to sinks.</p>
+</span></td></tr><tr><td><a href="type.Configuration$FlowLabel.html" class="ref-link ref-type" title="Class DataFlow::FlowLabel">FlowLabel</a></td><td><span class="qldoc-summary"><p>A label describing the kind of information tracked by a flow configuration.</p>
+</span></td></tr><tr><td><a href="type.Configuration$LabeledBarrierGuardNode.html" class="ref-link ref-type" title="Class DataFlow::LabeledBarrierGuardNode">LabeledBarrierGuardNode</a></td><td><span class="qldoc-summary"><p>A guard node that only blocks specific labels.</p>
+</span></td></tr><tr><td><a href="type.Configuration$MidPathNode.html" class="ref-link ref-type" title="Class DataFlow::MidPathNode">MidPathNode</a></td><td><span class="qldoc-summary"><p>A path node corresponding to an intermediate node on a path from a source to a sink.</p>
+</span></td></tr><tr><td><a href="type.Configuration$PathNode.html" class="ref-link ref-type" title="Class DataFlow::PathNode">PathNode</a></td><td><span class="qldoc-summary"><p>A data-flow node on an inter-procedural path from a source to a sink.</p>
+</span></td></tr><tr><td><a href="type.Configuration$SinkPathNode.html" class="ref-link ref-type" title="Class DataFlow::SinkPathNode">SinkPathNode</a></td><td><span class="qldoc-summary"><p>A path node corresponding to a flow sink.</p>
+</span></td></tr><tr><td><a href="type.Configuration$SourcePathNode.html" class="ref-link ref-type" title="Class DataFlow::SourcePathNode">SourcePathNode</a></td><td><span class="qldoc-summary"><p>A path node corresponding to a flow source.</p>
+</span></td></tr><tr><td><a href="type.Configuration$StandardFlowLabel.html" class="ref-link ref-type" title="Class DataFlow::StandardFlowLabel">StandardFlowLabel</a></td><td><span class="qldoc-summary"><p>A standard flow label, that is, either <code>FlowLabel::data()</code> or <code>FlowLabel::taint()</code>.</p>
+</span></td></tr><tr><td><a href="type.Configuration$VarAccessBarrier.html" class="ref-link ref-type" title="Class DataFlow::VarAccessBarrier">VarAccessBarrier</a></td><td><span class="qldoc-summary"><p>A guard node for a variable in a negative condition, such as <code>x</code> in <code>if(!x)</code>.  Can be added to a <code>isBarrier</code> in a data-flow configuration to block flow through such checks.</p>
+</span></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Modules">Modules</h2><div class="doc-block"><table><tbody><tr><td><a href="module.Configuration$FlowLabel.html" class="ref-link ref-module" title="Module DataFlow::FlowLabel">FlowLabel</a></td><td></td></tr><tr><td><a href="module.Configuration$PathGraph.html" class="ref-link ref-module" title="Module DataFlow::PathGraph">PathGraph</a></td><td><span class="qldoc-summary"><p>Provides the query predicates needed to include a graph in a path-problem query.</p>
+</span></td></tr><tr><td><a href="module.Configuration$PseudoProperties.html" class="ref-link ref-module" title="Module DataFlow::PseudoProperties">PseudoProperties</a></td><td><span class="qldoc-summary"><p>A collection of pseudo-properties that are used in multiple files.</p>
+</span></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Aliases">Aliases</h2><div class="doc-block"><table><tbody><tr><td><a href="type.Configuration$FlowLabel.html" class="ref-link ref-type" title="Class DataFlow::TaintKind">TaintKind</a></td><td><span class="qldoc-summary"><p>A kind of taint tracked by a taint-tracking configuration.</p>
+</span></td></tr></tbody></table></div></div></div></div></div><footer id="content-footer">Copyright 2020 GitHub Software UK Ltd.<a title="Privacy statement and tracking preferences" target="_blank" href="https://docs.github.com/github/site-policy/github-privacy-statement">Privacy Statement</a></footer></body></html>

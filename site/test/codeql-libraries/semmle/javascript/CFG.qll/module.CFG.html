@@ -1,0 +1,230 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="qldoc"><meta name="description" content="API documentation for CodeQL"><meta name="keywords" content="CodeQL,QL,CFG"><meta name="addsearch-category" content="JavaScript CodeQL library"><title>CFG</title><link rel="stylesheet" type="text/css" href="https://unpkg.com/@primer/css/dist/primer.css"><link rel="stylesheet" type="text/css" href="../../../qldoc.css"><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5Q9DBRM');</script></head><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5Q9DBRM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div class="Header text-white"><div class="Header-item"><svg class="octicon octicon-mark-github mr-2" height="32" viewbox="0 0 16 16" width="32"><path fill-rule="even-odd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></div><div class="Header-item--full f2 text-bold">CodeQL library for JavaScript</div><div class="Header-item"><span>Version 1.26.0</span></div><div class="Header-item .text-gray-light"><div class="nav-section"><a href="../../../index.html">Index</a></div></div><div class="Header-item"><a title="Search the CodeQL libraries" target="_blank" href="https://help.semmle.com/home/help/search-results-qldoc.html"><span class=".text-gray-light">Search</span></a></div></div><div id="main"><nav id="sidebar"><div id="sidebar-content" class="pt-2"><div class="nav-section"><p>For other CodeQL resources, including tutorials and examples, see <a href="https://help.semmle.com/QL/learn-ql/" class="learn-ql-link" target="_blank">Learning CodeQL</a><p>.</p></p><h2 class="section-heading"><a href="module.CFG.html" class="ref-link ref-module">CFG</a></h2><div class="doc-block"><ol class="section-links"><li></li><li></li><li><a href="module.CFG.html#Import%20path">Import path</a></li><li><a href="module.CFG.html#Imports">Imports</a></li><li><a href="module.CFG.html#Classes">Classes</a></li></ol></div></div></div></nav><div class="overflow-y-auto width-full pt-2"><div id="content"><div><h1 class="section-heading" id="CFG"><span><span>Module <span><a href="module.CFG.html" class="ref-link ref-module" title="Module CFG">CFG</a></span></span></span></h1></div><div><div class="doc-block"><div class="qldoc"><p>Provides classes for working with a CFG-based program representation.</p>
+<h2>Overview</h2>
+<p>Each <code>StmtContainer</code> (that is, function or toplevel) has an intra-procedural
+CFG associated with it, which is composed of <code>ControlFlowNode</code>s under a successor
+relation exposed by predicates <code>ControlFlowNode.getASuccessor()</code> and
+<code>ControlFlowNode.getAPredecessor()</code>.</p>
+<p>Each CFG has designated entry and exit nodes with types
+<code>ControlFlowEntryNode</code> and <code>ControlFlowExitNode</code>, respectively, which are the only two
+subtypes of <code>SyntheticControlFlowNode</code>. All <code>ControlFlowNode</code>s that are <em>not</em>
+<code>SyntheticControlFlowNode</code>s belong to class <code>ConcreteControlFlowNode</code>.</p>
+<p>The predicate <code>ASTNode.getFirstControlFlowNode()</code> relates AST nodes
+to the first (concrete) CFG node in the sub-graph of the CFG
+corresponding to the node.</p>
+<p>Most statement containers also have a <em>start node</em>, obtained by
+<code>StmtContainer.getStart()</code>, which is the unique CFG node at which execution
+of the toplevel or function begins. Unlike the entry node, which is a synthetic
+construct, the start node corresponds to an AST node: for instance, for
+toplevels, it is the first CFG node of the first statement, and for functions
+with parameters it is the CFG node corresponding to the first parameter.</p>
+<p>Empty toplevels do not have a start node, since all their CFG nodes are
+synthetic.</p>
+<h2>CFG Nodes</h2>
+<p>Non-synthetic CFG nodes exist for six kinds of AST nodes, representing various
+aspects of the program&rsquo;s runtime semantics:</p>
+<ul>
+<li><code>Expr</code>: the CFG node represents the evaluation of the expression,
+including any side effects this may have;</li>
+<li><code>Stmt</code>: the CFG node represents the execution of the statement;</li>
+<li><code>Property</code>: the CFG node represents the assignment of the property;</li>
+<li><code>PropertyPattern</code>: the CFG node represents the matching of the property;</li>
+<li><code>MemberDefinition</code>: the CFG node represents the definition of the member
+method or field;</li>
+<li><code>MemberSignature</code>: the CFG node represents the point where the signature
+is declared, although this has no effect at runtime.</li>
+</ul>
+<h2>CFG Structure</h2>
+<h3>Expressions</h3>
+<p>For most expressions, the successor relation visits sub-expressions first,
+and then the expression itself, representing the order of evaluation at
+runtime. For example, the CFG for the expression <code>23 + 19</code> is</p>
+ <pre>
+ &hellip; &rarr; [23] &rarr; [19] &rarr; [23 + 19] &rarr; &hellip;
+ </pre>
+<p>In particular, this means that <code>23</code> is the first CFG node of the expression
+<code>23 + 19</code>.</p>
+<p>Similarly, for assignments the left hand side is visited first, then
+the right hand side, then the assignment itself:</p>
+ <pre>
+ &hellip; &rarr; [x] &rarr; [y] &rarr; [x = y] &rarr; &hellip;
+ </pre>
+<p>For properties, the name expression is visited first, then the value,
+then the default value, if any. The same principle applies for getter
+and setter properties: in this case, the &ldquo;value&rdquo; is simply the accessor
+function, and there is no default value.</p>
+<p>There are only a few exceptions, generally for cases where the value of
+the whole expression is the value of one of its sub-expressions. That
+sub-expression then comes last in the CFG:</p>
+<ul>
+<li>Parenthesized expression:</li>
+</ul>
+ <pre>
+ &hellip; &rarr; [(x)] &rarr; [x] &rarr; &hellip;
+ </pre>
+<ul>
+<li>Conditional expressions:</li>
+</ul>
+ <pre>
+ &hellip; &rarr;  [x ? y : z]  &rarr; [x] &#x252c;&rarr; [y] &rarr; &hellip; <br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#x2514;&rarr; [z] &rarr; &hellip;
+ </pre>
+<ul>
+<li>Short-circuiting operator <code>&amp;&amp;</code> (same for <code>||</code>):</li>
+</ul>
+ <pre>
+ &hellip; &rarr; [x && y] &rarr; [x] &rarr; &hellip; <br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &darr; <br>
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [y] &rarr; &hellip;
+ </pre>
+<ul>
+<li>Sequence/comma expressions:</li>
+</ul>
+ <pre>
+ &hellip; &rarr; [x, y] &rarr; [x] &rarr; [y] &rarr; &hellip;
+ </pre>
+<p>Finally, array expressions and object expressions also precede their
+sub-expressions in the CFG to model the fact that the new array/object
+is created before its elements/properties are evaluated:</p>
+ <pre>
+ &hellip; &rarr; [{ x: 42 }] &rarr; [x] &rarr; [42] &rarr; [x : 42] &rarr; &hellip;
+ </pre>
+<h3>Statements</h3>
+<p>For most statements, the successor relation visits the statement first and then
+its sub-expressions and sub-statements.</p>
+<p>For example, the CFG of a block statement first visits the individual statements,
+then the block statement itself.</p>
+<p>Similarly, the CFG for an <code>if</code> statement first visits the statement itself, then
+the condition. The condition, in turn, has the &ldquo;then&rdquo; branch as one of its successors
+and the &ldquo;else&rdquo; branch (if it exists) or the next statement after the &ldquo;if&rdquo; (if it does not)
+as the other:</p>
+ <pre>
+ &hellip; &rarr; [if (x) s1 else s2] &rarr; [x] &#x252c;&rarr; [s1] &rarr; &hellip;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#x2514;&rarr; [s2] &rarr; &hellip;
+ </pre>
+<p>For loops, the CFG reflects the order in which the loop test and the body are
+executed.</p>
+<p>For instance, the CFG of a <code>while</code> loop starts with the statement itself, followed by
+the condition. The condition has two successors: the body, and the statement following
+the loop. The body, in turn, has the condition as its successor. This reflects the fact
+that <code>while</code> loops first test their condition before executing their body:</p>
+ <pre>
+ &hellip; &rarr; [while (x) s] &rarr; [x] &rarr; &hellip;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#x21c5;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [s]
+ </pre>
+<p>On the other hand, <code>do</code>-<code>while</code> loops first execute their body before testing their condition:</p>
+ <pre>
+ &hellip; &rarr; [do s while (x)] &rarr; [s] &#x21c4; [x] &rarr; &hellip;
+ </pre>
+<p>The CFG of a for loop starts with the loop itself, followed by the initializer expression
+(if any), then the test expression (if any). The test expression has two successors: the
+body, and the statement following the loop. The body, in turn, has the update expression
+(if any) as its successor, and the update expression has the test expression as its only
+successor:</p>
+ <pre>
+ &hellip; &rarr; [for(i;t;u) s] &rarr; [i] &rarr; [t] &rarr; &hellip;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#x2199;&nbsp;&#x2196
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[s] &rarr; [u]
+ </pre>
+<p>The CFG of a for-in loop <code>for(x in y) s</code> starts with the loop itself, followed by the
+iteration domain <code>y</code>. That node has two successors: the iterator <code>x</code>, and the statement
+following the loop (modeling early exit in case <code>y</code> is empty). After the iterator <code>x</code>
+comes the loop body <code>s</code>, which again has two successors: the iterator <code>x</code> (modeling the
+case where there are more elements to iterate over), and the statement following the loop
+(modeling the case where there are no more elements to iterate):</p>
+ <pre>
+ &hellip; &rarr; [for(x in y) s] &rarr; [y] &rarr; &nbsp;&hellip;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&uarr;
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x] &#x21c4; [s]
+ </pre>
+<p>For-of loops are the same.</p>
+<p>Finally, <code>return</code> and <code>throw</code> statements are different from all other statement types in
+that for them the statement itself comes <em>after</em> the operand, reflecting the fact that
+the operand is evaluated before the return or throw is initiated:</p>
+ <pre>
+ &hellip; &rarr; [x] &rarr; [return x;] &rarr; &hellip;
+ </pre>
+<h3>Unstructured control flow</h3>
+<p>Unstructured control flow is modeled in the obvious way: <code>break</code> and <code>continue</code> statements
+have as their successor the next statement that is executed after the jump; <code>throw</code>
+statements have the nearest enclosing <code>catch</code> clause as their successor, or the exit node
+of the enclosing container if there is no enclosing <code>catch</code>; <code>return</code> statements have the
+exit node of the enclosing container as their successor.</p>
+<p>In all cases, the control flow may be intercepted by an intervening <code>finally</code> block. For
+instance, consider the following code snippet:</p>
+ <pre>
+ try {
+ &nbsp;&nbsp;if (x)
+ &nbsp;&nbsp;&nbsp;&nbsp;return;
+ &nbsp;&nbsp;s
+ } finally {
+ &nbsp;&nbsp;t
+ }
+ u
+ </pre>
+<p>Here, the successor of <code>return</code> is not the exit node of the enclosing container, but instead
+the <code>finally</code> block. The last statement of the <code>finally</code> block (here, <code>t</code>) has two successors:
+<code>u</code> to model the case where <code>finally</code> was entered from <code>s</code>, and the exit node of the enclosing
+container to model the case where the <code>return</code> is resumed after the <code>finally</code> block.</p>
+<p>Note that <code>finally</code> blocks can lead to imprecise control flow modeling since the <code>finally</code>
+block resumes the action of <em>all</em> statements it intercepts: in the above example, the CFG
+not only models the executions <code>return</code> → <code>finally</code> → <code>t</code> → <code>exit</code> and
+<code>s</code> → <code>finally</code> → <code>t</code> → <code>u</code>, but also allows the path  <code>return</code> →
+<code>finally</code> → <code>t</code> → <code>u</code>, which does not correspond to any actual execution.</p>
+<p>The CFG also models the fact that certain kinds of expressions (calls, <code>new</code> expressions,
+property accesses and <code>await</code> expressions) can throw exceptions, but <em>only</em> if there is
+an enclosing <code>try</code>-<code>catch</code> statement.</p>
+<h3>Function preambles</h3>
+<p>The CFG of a function starts with its entry node, followed by a <em>preamble</em>, which is a part of
+the CFG that models parameter passing and function hoisting. The preamble is followed by the
+function body, which in turn is followed by the exit node.</p>
+<p>For function expressions, the preamble starts with the function name, if any, to reflect the
+fact that the function object is bound to that name inside the scope of the function. Next,
+for both function expressions and function declarations, the parameters are executed in sequence
+to represent parameter passing. If a parameter has a default value, that value is visited before
+the parameter itself. Finally, the CFG nodes corresponding to the names of all hoisted functions
+inside the outer function body are visited in lexical order. This reflects the fact that hoisted
+functions are initialized before the body starts executing, but <em>after</em> parameters have been
+initialized.</p>
+<p>For instance, consider the following function declaration:</p>
+ <pre>
+ function outer(x, y = 42) {
+ &nbsp;&nbsp;s
+ &nbsp;&nbsp;function inner() {}
+ &nbsp;&nbsp;t
+ }
+ </pre>
+<p>Its CFG is</p>
+ <pre>
+ [entry] &rarr; [x] &rarr; [42] &rarr; [y] &rarr; [inner] &rarr; [s] &rarr; [function inner() {}] &rarr; [t] &rarr; [exit]
+ </pre>
+<p>Note that the function declaration <code>[function inner() {}]</code> as a whole is part of the CFG of the
+body of <code>outer</code>, while its function identifier <code>inner</code> is part of the preamble.</p>
+<h3>Toplevel preambles</h3>
+<p>Similar to functions, toplevels (that is, modules, scripts or event handlers) also have a
+preamble. For ECMAScript 2015 modules, all import specifiers are traversed first, in lexical
+order, reflecting the fact that imports are resolved before execution of the module itself
+begins; next, for all toplevels, the names of hoisted functions are traversed in lexical order
+(as for functions). Afterwards, the CFG continues with the body of the toplevel, and ends
+with the exit node.</p>
+<p>As an example, consider the following module:</p>
+<pre><code class="numbered-code"><span class="numbered-code-line">s
+</span><span class="numbered-code-line">import x as y from 'foo';
+</span><span class="numbered-code-line">function f() {}
+</span><span class="numbered-code-line">t
+</span></code></pre>
+<p>Its CFG is</p>
+ <pre>
+ [entry] &rarr; [x as y] &rarr; [f] &rarr; [s] &rarr; [import x as y from 'foo';] &rarr; [function f() {}] &rarr; [t] &rarr; [exit]
+ </pre>
+<p>Note that the <code>import</code> statement as a whole is part of the CFG of the body, while its single
+import specifier <code>x as y</code> forms part of the preamble.</p>
+</div></div></div><div><h2 class="subsection-heading" id="Import path">Import path</h2><div class="doc-block"><code>import semmle.javascript.CFG</code></div></div><div><h2 class="subsection-heading" id="Imports">Imports</h2><div class="doc-block"><table><tbody><tr><td><a href="../../../javascript.qll/module.javascript.html" class="ref-link ref-module" title="Module javascript">javascript</a></td><td><span class="qldoc-summary"><p>Provides classes for working with JavaScript programs, as well as JSON, YAML and HTML.</p>
+</span></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Classes">Classes</h2><div class="doc-block"><table><tbody><tr><td><a href="type.CFG$ConcreteControlFlowNode.html" class="ref-link ref-type" title="Class ConcreteControlFlowNode">ConcreteControlFlowNode</a></td><td><span class="qldoc-summary"><p>A CFG node corresponding to a program element, that is, a CFG node that is  not a <code>SyntheticControlFlowNode</code>.</p>
+</span></td></tr><tr><td><a href="type.CFG$ConditionGuardNode.html" class="ref-link ref-type" title="Class ConditionGuardNode">ConditionGuardNode</a></td><td><span class="qldoc-summary"><p>A guard node recording that some condition is known to be truthy or  falsy at this point in the program.</p>
+</span></td></tr><tr><td><a href="type.CFG$ControlFlowEntryNode.html" class="ref-link ref-type" title="Class ControlFlowEntryNode">ControlFlowEntryNode</a></td><td><span class="qldoc-summary"><p>A synthetic CFG node marking the entry point of a function or toplevel script.</p>
+</span></td></tr><tr><td><a href="type.CFG$ControlFlowExitNode.html" class="ref-link ref-type" title="Class ControlFlowExitNode">ControlFlowExitNode</a></td><td><span class="qldoc-summary"><p>A synthetic CFG node marking the exit of a function or toplevel script.</p>
+</span></td></tr><tr><td><a href="type.CFG$ControlFlowNode.html" class="ref-link ref-type" title="Class ControlFlowNode">ControlFlowNode</a></td><td><span class="qldoc-summary"><p>A node in the control flow graph, which is an expression, a statement,  or a synthetic node.</p>
+</span></td></tr><tr><td><a href="type.CFG$GuardControlFlowNode.html" class="ref-link ref-type" title="Class GuardControlFlowNode">GuardControlFlowNode</a></td><td><span class="qldoc-summary"><p>A synthetic CFG node recording that some condition is known to hold  at this point in the program.</p>
+</span></td></tr><tr><td><a href="type.CFG$SyntheticControlFlowNode.html" class="ref-link ref-type" title="Class SyntheticControlFlowNode">SyntheticControlFlowNode</a></td><td><span class="qldoc-summary"><p>A synthetic CFG node that does not correspond to a statement or expression;  examples include guard nodes and entry/exit nodes.</p>
+</span></td></tr></tbody></table></div></div></div></div></div><footer id="content-footer">Copyright 2020 GitHub Software UK Ltd.<a title="Privacy statement and tracking preferences" target="_blank" href="https://docs.github.com/github/site-policy/github-privacy-statement">Privacy Statement</a></footer></body></html>

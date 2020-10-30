@@ -1,0 +1,83 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="qldoc"><meta name="description" content="API documentation for CodeQL"><meta name="keywords" content="CodeQL,QL,TaintTracking"><meta name="addsearch-category" content="Python CodeQL library"><title>TaintTracking</title><link rel="stylesheet" type="text/css" href="https://unpkg.com/@primer/css/dist/primer.css"><link rel="stylesheet" type="text/css" href="../../../../qldoc.css"><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5Q9DBRM');</script></head><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5Q9DBRM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div class="Header text-white"><div class="Header-item"><svg class="octicon octicon-mark-github mr-2" height="32" viewbox="0 0 16 16" width="32"><path fill-rule="even-odd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></div><div class="Header-item--full f2 text-bold">CodeQL library for Python</div><div class="Header-item"><span>Version 1.26.0</span></div><div class="Header-item .text-gray-light"><div class="nav-section"><a href="../../../../index.html">Index</a></div></div><div class="Header-item"><a title="Search the CodeQL libraries" target="_blank" href="https://help.semmle.com/home/help/search-results-qldoc.html"><span class=".text-gray-light">Search</span></a></div></div><div id="main"><nav id="sidebar"><div id="sidebar-content" class="pt-2"><div class="nav-section"><p>For other CodeQL resources, including tutorials and examples, see <a href="https://help.semmle.com/QL/learn-ql/" class="learn-ql-link" target="_blank">Learning CodeQL</a><p>.</p></p><h2 class="section-heading"><a href="module.TaintTracking.html" class="ref-link ref-module">TaintTracking</a></h2><div class="doc-block"><ol class="section-links"><li></li><li></li><li><a href="module.TaintTracking.html#Import%20path">Import path</a></li><li><a href="module.TaintTracking.html#Imports">Imports</a></li><li><a href="module.TaintTracking.html#Classes">Classes</a></li><li><a href="module.TaintTracking.html#Modules">Modules</a></li><li><a href="module.TaintTracking.html#Aliases">Aliases</a></li></ol></div></div></div></nav><div class="overflow-y-auto width-full pt-2"><div id="content"><div><h1 class="section-heading" id="TaintTracking"><span><span>Module <span><a href="module.TaintTracking.html" class="ref-link ref-module" title="Module TaintTracking">TaintTracking</a></span></span></span></h1></div><div><div class="doc-block"><div class="qldoc"><h1>Python Taint Tracking Library</h1>
+<p>The taint tracking library is described in three parts.</p>
+<ol>
+<li>Specification of kinds, sources, sinks and flows.</li>
+<li>The high level query API</li>
+<li>The implementation.</li>
+</ol>
+<h2>Specification</h2>
+<p>There are four parts to the specification of a taint tracking query.
+These are:</p>
+<ol>
+<li>
+<p>Kinds</p>
+<p>The Python taint tracking library supports arbitrary kinds of taint.
+This is useful where you want to track something related to &ldquo;taint&rdquo;, but that is in itself not dangerous.
+For example, we might want to track the flow of request objects.
+Request objects are not in themselves tainted, but they do contain tainted data.
+For example, the length or timestamp of a request may not pose a risk, but the GET or POST string probably do.
+So, we would want to track request objects distinctly from the request data in the GET or POST field.</p>
+<p>Kinds can also specify additional flow steps, but we recommend using the <code>DataFlowExtension</code> module,
+which is less likely to cause issues with unwanted recursion.</p>
+</li>
+<li>
+<p>Sources</p>
+<p>Sources of taint can be added by importing a predefined sub-type of <code>TaintSource</code>, or by defining new ones.</p>
+</li>
+<li>
+<p>Sinks (or vulnerabilities)</p>
+<p>Sinks can be added by importing a predefined sub-type of <code>TaintSink</code>, or by defining new ones.</p>
+</li>
+<li>
+<p>Flow extensions</p>
+<p>Additional flow can be added by importing predefined sub-types of <code>DataFlowExtension::DataFlowNode</code>
+or <code>DataFlowExtension::DataFlowVariable</code> or by defining new ones.</p>
+</li>
+</ol>
+<h2>The high-level query API</h2>
+<p>The <code>TaintedNode</code> fully describes the taint flow graph.
+The full graph can be expressed as:</p>
+<pre><code class="language-ql numbered-code"><span class="numbered-code-line">from TaintedNode n, TaintedNode s
+</span><span class="numbered-code-line">where s = n.getASuccessor()
+</span><span class="numbered-code-line">select n, s
+</span></code></pre>
+<p>The source -&gt; sink relation can be expressed either using <code>TaintedNode</code>:</p>
+<pre><code class="language-ql numbered-code"><span class="numbered-code-line">from TaintedNode src, TaintedNode sink
+</span><span class="numbered-code-line">where src.isSource() and sink.isSink() and src.getASuccessor*() = sink
+</span><span class="numbered-code-line">select src, sink
+</span></code></pre>
+<p>or, using the specification API:</p>
+<pre><code class="language-ql numbered-code"><span class="numbered-code-line">from TaintSource src, TaintSink sink
+</span><span class="numbered-code-line">where src.flowsToSink(sink)
+</span><span class="numbered-code-line">select src, sink
+</span></code></pre>
+<h2>The implementation</h2>
+<p>The data-flow graph used by the taint-tracking library is the one created by the points-to analysis,
+and consists of the base data-flow graph defined in <code>semmle/python/essa/Essa.qll</code>
+enhanced with precise variable flows, call graph and type information.
+This graph is then enhanced with additional flows as specified above.
+Since the call graph and points-to information is context sensitive, the taint graph must also be context sensitive.</p>
+<p>The taint graph is a directed graph where each node consists of a
+<code>(CFG node, context, taint)</code> triple although it could be thought of more naturally
+as a number of distinct graphs, one for each input taint-kind consisting of data flow nodes,
+<code>(CFG node, context)</code> pairs, labelled with their <code>taint</code>.</p>
+<p>The <code>TrackedValue</code> used in the implementation is not the taint kind specified by the user,
+but describes both the kind of taint and how that taint relates to any object referred to by a data-flow graph node or edge.
+Currently, only two types of <code>taint</code> are supported: simple taint, where the object is actually tainted;
+and attribute taint where a named attribute of the referred object is tainted.</p>
+<p>Support for tainted members (both specific members of tuples and the like,
+and generic members for mutable collections) are likely to be added in the near future and other forms are possible.
+The types of taints are hard-wired with no user-visible extension method at the moment.</p>
+</div></div></div><div><h2 class="subsection-heading" id="Import path">Import path</h2><div class="doc-block"><code>import semmle.python.dataflow.TaintTracking</code></div></div><div><h2 class="subsection-heading" id="Imports">Imports</h2><div class="doc-block"><table><tbody><tr><td><a href="../Configuration.qll/module.Configuration.html" class="ref-link ref-module" title="Module Configuration">Configuration</a></td><td></td></tr><tr><td><a href="../../../../python.qll/module.python.html" class="ref-link ref-module" title="Module python">python</a></td><td></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Classes">Classes</h2><div class="doc-block"><table><tbody><tr><td><a href="type.TaintTracking$CollectionKind.html" class="ref-link ref-type" title="Class TaintTracking::CollectionKind">CollectionKind</a></td><td><span class="qldoc-summary"><p>Taint kinds representing collections of other taint kind.  We use <code>{kind}</code> to represent a mapping of string to <code>kind</code> and  <code>[kind]</code> to represent a flat collection of <code>kind</code>.  The use of <code>{</code> and <code>[</code> is chosen to reflect dict and list literals  in Python. We choose a single character prefix and suffix for simplicity  and ease of preventing infinite recursion.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$DictKind.html" class="ref-link ref-type" title="Class TaintTracking::DictKind">DictKind</a></td><td><span class="qldoc-summary"><p>A taint kind representing a mapping of objects to kinds.  Typically a dict, but can include other mappings.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$Sanitizer.html" class="ref-link ref-type" title="Class TaintTracking::Sanitizer">Sanitizer</a></td><td><span class="qldoc-summary"><p>A type of sanitizer of untrusted data.  Examples include sanitizers for http responses, for DB access or for shell commands.  Usually a sanitizer can only sanitize data for one particular use.  For example, a sanitizer for DB commands would not be safe to use for http responses.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$SequenceKind.html" class="ref-link ref-type" title="Class TaintTracking::SequenceKind">SequenceKind</a></td><td><span class="qldoc-summary"><p>A taint kind representing a flat collections of kinds.  Typically a sequence, but can include sets.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$TaintKind.html" class="ref-link ref-type" title="Class TaintTracking::TaintKind">TaintKind</a></td><td><span class="qldoc-summary"><p>A &lsquo;kind&rsquo; of taint. This may be almost anything,  but it is typically something like a &ldquo;user-defined string&rdquo;.  Examples include, data from a http request object,  data from an SMS or other mobile data source,  or, for a super secure system, environment variables or  the local file system.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$TaintSink.html" class="ref-link ref-type" title="Class TaintTracking::TaintSink">TaintSink</a></td><td><span class="qldoc-summary"><p>A node that is vulnerable to one or more types of taint.  These nodes provide the sinks when computing the taint flow graph.  An example would be an argument to a write to a http response object,  such an argument would be vulnerable to unsanitized user-input (XSS).</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$TaintSource.html" class="ref-link ref-type" title="Class TaintTracking::TaintSource">TaintSource</a></td><td><span class="qldoc-summary"><p>A source of taintedness.  Users of the taint tracking library should override this  class to provide their own sources.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$TaintedDefinition.html" class="ref-link ref-type" title="Class TaintTracking::TaintedDefinition">TaintedDefinition</a></td><td><span class="qldoc-summary"><p>Warning: Advanced feature. Users are strongly recommended to use <code>TaintSource</code> instead.  A source of taintedness on the ESSA data-flow graph.  Users of the taint tracking library can override this  class to provide their own sources on the ESSA graph.</p>
+</span></td></tr><tr><td><a href="type.TaintTracking$TaintedPathSink.html" class="ref-link ref-type" title="Class TaintTracking::TaintedPathSink">TaintedPathSink</a></td><td></td></tr><tr><td><a href="type.TaintTracking$TaintedPathSource.html" class="ref-link ref-type" title="Class TaintTracking::TaintedPathSource">TaintedPathSource</a></td><td></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Modules">Modules</h2><div class="doc-block"><table><tbody><tr><td><a href="module.TaintTracking$DataFlow.html" class="ref-link ref-module" title="Module TaintTracking::DataFlow">DataFlow</a></td><td><span class="qldoc-summary"><p>Data flow module providing an interface compatible with  the other language implementations.</p>
+</span></td></tr><tr><td><a href="module.TaintTracking$DataFlowExtension.html" class="ref-link ref-module" title="Module TaintTracking::DataFlowExtension">DataFlowExtension</a></td><td><span class="qldoc-summary"><p>Extension for data-flow, to help express data-flow paths that are  library or framework specific and cannot be inferred by the general  data-flow machinery.</p>
+</span></td></tr><tr><td><a href="module.TaintTracking$DictKind.html" class="ref-link ref-module" title="Module TaintTracking::DictKind">DictKind</a></td><td></td></tr><tr><td><a href="module.TaintTracking$SequenceKind.html" class="ref-link ref-module" title="Module TaintTracking::SequenceKind">SequenceKind</a></td><td></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Aliases">Aliases</h2><div class="doc-block"><table><tbody><tr><td><a href="type.TaintTracking$TaintKind.html" class="ref-link ref-type" title="Class TaintTracking::FlowLabel">FlowLabel</a></td><td><span class="qldoc-summary"><p>Alias of <code>TaintKind</code>, so the two types can be used interchangeably.</p>
+</span></td></tr><tr><td><a href="../Implementation.qll/type.Implementation$TaintTrackingNode.html" class="ref-link ref-type" title="Class Implementation::TaintedNode">TaintedNode</a></td><td><span class="qldoc-summary"><p>Class representing the (node, context, path, kind) tuple.   Used for context-sensitive path-aware taint-tracking.</p>
+</span></td></tr></tbody></table></div></div></div></div></div><footer id="content-footer">Copyright 2020 GitHub Software UK Ltd.<a title="Privacy statement and tracking preferences" target="_blank" href="https://docs.github.com/github/site-policy/github-privacy-statement">Privacy Statement</a></footer></body></html>
