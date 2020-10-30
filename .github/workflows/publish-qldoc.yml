@@ -23,6 +23,8 @@ jobs:
         workflow: __docs-generate-qldoc.yml
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
+    - name: Check download
+      run: cd artifact && ls -la
     - name: Move and rename artifacts 
       run: |
         mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries && rm -r artifact;
