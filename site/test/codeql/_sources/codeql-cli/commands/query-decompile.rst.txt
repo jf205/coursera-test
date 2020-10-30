@@ -43,9 +43,6 @@ Options
    ``ra``: A relational algebra intermediate representation. This is used
    by the query evaluation phase.
 
-   ``bytecode``: Show the raw (uncompressed) bytecode from the .qlo file.
-   Mostly useful for debugging the compiler/evaluator.
-
    The default is\ ``dil`` if the query was compiled with
    ``--include-dil-in-qlo`` and ``ra`` otherwise
 
