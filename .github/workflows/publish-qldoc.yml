@@ -27,12 +27,12 @@ jobs:
       run: |
         mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries && rm -r artifact;
         cd '${{ github.event.inputs.destination }}'/codeql-libraries;
-        unzip pack-cpp.qldoc.zip && mv pack-cpp-qldoc cpp;
-        unzip pack-csharp.qldoc.zip && mv pack-csharp-qldoc csharp;
-        unzip pack-go.qldoc.zip && mv pack-go-qldoc go;
-        unzip pack-java.qldoc.zip && mv pack-java-qldoc java;
-        unzip pack-javascript.qldoc.zip && mv pack-javascript-qldoc javascript;
-        unzip pack-python.qldoc.zip && mv pack-python-qldoc python;
+        unzip pack-cpp-qldoc.zip && mv pack-cpp-qldoc cpp;
+        unzip pack-csharp-qldoc.zip && mv pack-csharp-qldoc csharp;
+        unzip pack-go-qldoc.zip && mv pack-go-qldoc go;
+        unzip pack-java-qldoc.zip && mv pack-java-qldoc java;
+        unzip pack-javascript-qldoc.zip && mv pack-javascript-qldoc javascript;
+        unzip pack-python-qldoc.zip && mv pack-python-qldoc python;
         rm -r pack-ql-qldoc.zip
     - name: Check files 
       run: cd '${{ github.event.inputs.destination }}'/codeql-libraries && ls -la
