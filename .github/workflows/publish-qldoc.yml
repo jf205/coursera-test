@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Delete existing docs folder
       run: |
-        rm -r '${{ github.event.inputs.destination }}'/codeql-libraries/**;
+        rm -r ${{ github.event.inputs.destination }}/codeql-libraries/**;
     - name: Download artifact
       uses: dawidd6/action-download-artifact@v2
       with:
@@ -24,12 +24,12 @@ jobs:
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
     - name: Move artifacts 
-      run: mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries/ && rm -r artifact
+      run: mv artifact/** ${{ github.event.inputs.destination }}/codeql-libraries/ && rm -r artifact
     - name: check artifacts
-      working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
+      working-directory: ${{ github.event.inputs.destination }}/codeql-libraries
       run: ls -la
     - name: Unzip artifacts
-      working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
+      working-directory: ${{ github.event.inputs.destination }}/codeql-libraries
       run: |
         unzip pack-cpp-qldoc.zip -d cpp && rm -r pack-cpp-qldoc.zip;
         unzip pack-csharp-qldoc.zip -d csharp && rm -r pack-csharp-qldoc.zip;
