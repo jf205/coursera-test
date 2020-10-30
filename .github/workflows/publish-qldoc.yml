@@ -23,19 +23,19 @@ jobs:
         workflow: __docs-generate-qldoc.yml
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
-    - name: Check download
-      run: cd artifact && ls -la
-    - name: Move and rename artifacts 
+    - name: Move, unzip and rename artifacts 
       run: |
         mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries && rm -r artifact;
         cd '${{ github.event.inputs.destination }}'/codeql-libraries;
-        mv pack-cpp-qldoc.zip cpp;
-        mv pack-csharp-qldoc.zip csharp;
-        mv pack-go-qldoc.zip go;
-        mv pack-java-qldoc.zip java;
-        mv pack-javascript-qldoc.zip javascript;
-        mv pack-python-qldoc.zip python;
+        unzip pack-cpp.qldoc.zip && mv pack-cpp-qldoc cpp;
+        unzip pack-csharp.qldoc.zip && mv pack-csharp-qldoc csharp;
+        unzip pack-go.qldoc.zip && mv pack-go-qldoc go;
+        unzip pack-java.qldoc.zip && mv pack-java-qldoc java;
+        unzip pack-javascript.qldoc.zip && mv pack-javascript-qldoc javascript;
+        unzip pack-python.qldoc.zip && mv pack-python-qldoc python;
         rm -r pack-ql-qldoc.zip
+    - name: Check files 
+      run: cd '${{ github.event.inputs.destination }}'/codeql-libraries && ls -la
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
