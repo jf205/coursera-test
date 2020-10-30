@@ -1,0 +1,73 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="qldoc"><meta name="description" content="API documentation for CodeQL"><meta name="keywords" content="CodeQL,QL,SsaCompute"><meta name="addsearch-category" content="Python CodeQL library"><title>SsaCompute</title><link rel="stylesheet" type="text/css" href="https://unpkg.com/@primer/css/dist/primer.css"><link rel="stylesheet" type="text/css" href="../../../../qldoc.css"><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5Q9DBRM');</script></head><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5Q9DBRM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><div class="Header text-white"><div class="Header-item"><svg class="octicon octicon-mark-github mr-2" height="32" viewbox="0 0 16 16" width="32"><path fill-rule="even-odd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></div><div class="Header-item--full f2 text-bold">CodeQL library for Python</div><div class="Header-item"><span>Version 1.26.0</span></div><div class="Header-item .text-gray-light"><div class="nav-section"><a href="../../../../index.html">Index</a></div></div><div class="Header-item"><a title="Search the CodeQL libraries" target="_blank" href="https://help.semmle.com/home/help/search-results-qldoc.html"><span class=".text-gray-light">Search</span></a></div></div><div id="main"><nav id="sidebar"><div id="sidebar-content" class="pt-2"><div class="nav-section"><p>For other CodeQL resources, including tutorials and examples, see <a href="https://help.semmle.com/QL/learn-ql/" class="learn-ql-link" target="_blank">Learning CodeQL</a><p>.</p></p><h2 class="section-heading"><a href="module.SsaCompute.html" class="ref-link ref-module">SsaCompute</a></h2><div class="doc-block"><ol class="section-links"><li></li><li></li><li><a href="module.SsaCompute.html#Import%20path">Import path</a></li><li><a href="module.SsaCompute.html#Imports">Imports</a></li><li><a href="module.SsaCompute.html#Predicates">Predicates</a></li><li><a href="module.SsaCompute.html#Aliases">Aliases</a></li></ol></div></div></div></nav><div class="overflow-y-auto width-full pt-2"><div id="content"><div><h1 class="section-heading" id="SsaCompute"><span><span>Module <span><a href="module.SsaCompute.html" class="ref-link ref-module" title="Module SsaCompute">SsaCompute</a></span></span></span></h1></div><div><div class="doc-block"><div class="qldoc"><p>Provides predicates for computing Enhanced SSA form
+Computation of ESSA form is identical to plain SSA form,
+but what counts as a use of definition differs.</p>
+<h2>Language independent data-flow graph construction</h2>
+<p>Construction of the data-flow graph is based on the principles behind SSA variables.</p>
+<p>The definition of an SSA variable is that (statically):</p>
+<ul>
+<li>Each variable has exactly one definition</li>
+<li>A variable&rsquo;s definition dominates all its uses.</li>
+</ul>
+<p>SSA form was originally designed for compiler use and thus a &ldquo;definition&rdquo; of an SSA variable is
+the same as a definition of the underlying source-code variable. For register allocation this is
+sufficient to treat the variable as equivalent to the value held in the variable.</p>
+<p>However, this doesn&rsquo;t always work the way we want it for data-flow analysis.</p>
+<p>When we start to consider attribute assignment, tests on the value referred to be a variable,
+escaping variables, implicit definitions, etc., we need something finer grained.</p>
+<p>A data-flow variable has the same properties as a normal SSA variable, but it also has the property that
+<em>anything</em> that may change the way we view an object referred to by a variable should be treated as a definition of that variable.</p>
+<p>For example, tests are treated as definitions, so for the following Python code:</p>
+<pre><code class="language-python numbered-code"><span class="numbered-code-line">x = None
+</span><span class="numbered-code-line">if not x:
+</span><span class="numbered-code-line">     x = True
+</span></code></pre>
+<p>The data-flow graph (for <code>x</code>) is:</p>
+<pre><code class="numbered-code"><span class="numbered-code-line">x0 = None
+</span><span class="numbered-code-line">x1 = pi(x0, not x)
+</span><span class="numbered-code-line">x2 = True
+</span><span class="numbered-code-line">x3 = phi(x1, x2)
+</span></code></pre>
+<p>from which is it possible to infer that <code>x3</code> may not be None.
+[ Phi functions are standard SSA, a Pi function is a filter or guard on the possible values that a variable
+may hold]</p>
+<p>Attribute assignments are also treated as definitions, so for the following Python code:</p>
+<pre><code class="language-python numbered-code"><span class="numbered-code-line">x = C()
+</span><span class="numbered-code-line">x.a = 1
+</span><span class="numbered-code-line">y = C()
+</span><span class="numbered-code-line">y.b = 2
+</span></code></pre>
+<p>The data-flow graph is:</p>
+<pre><code class="numbered-code"><span class="numbered-code-line">x0 = C()
+</span><span class="numbered-code-line">x1 = attr-assign(x0, .a = 1)
+</span><span class="numbered-code-line">y0 = C()
+</span><span class="numbered-code-line">y1 = attr-assign(y0, .b = 1)
+</span></code></pre>
+<p>From which we can infer that <code>x1.a</code> is <code>1</code> but we know nothing about <code>y0.a</code> despite it being the same type.</p>
+<p>We can also insert &ldquo;definitions&rdquo; for transfers of values (say in global variables) where we do not yet know the call-graph. For example,</p>
+<pre><code class="language-python numbered-code"><span class="numbered-code-line">def foo():
+</span><span class="numbered-code-line">    global g
+</span><span class="numbered-code-line">    g = 1
+</span><span class="numbered-code-line">
+</span><span class="numbered-code-line">def bar():
+</span><span class="numbered-code-line">    foo()
+</span><span class="numbered-code-line">    g
+</span></code></pre>
+<p>It should be clear in the above code that the use of <code>g</code> will have a value of <code>1</code>.
+The data-flow graph looks like:</p>
+<pre><code class="language-python numbered-code"><span class="numbered-code-line">def foo():
+</span><span class="numbered-code-line">    g0 = scope-entry(g)
+</span><span class="numbered-code-line">    g1 = 1
+</span><span class="numbered-code-line">
+</span><span class="numbered-code-line">def bar():
+</span><span class="numbered-code-line">    g2 = scope-entry(g)
+</span><span class="numbered-code-line">    foo()
+</span><span class="numbered-code-line">    g3 = call-site(g, foo())
+</span></code></pre>
+<p>Once we have established that <code>foo()</code> calls <code>foo</code>, then it is possible to link <code>call-site(g, foo())</code> to the final value of <code>g</code> in <code>foo</code>, i.e. <code>g1</code>, so effectively <code>g3 = call-site(g, foo())</code> becomes <code>g3 = g1</code> and the global data-flow graph for <code>g</code> effectively becomes:</p>
+<pre><code class="numbered-code"><span class="numbered-code-line">g0 = scope-entry(g)
+</span><span class="numbered-code-line">g1 = 1
+</span><span class="numbered-code-line">g2 = scope-entry(g)
+</span><span class="numbered-code-line">g3 = g1
+</span></code></pre>
+<p>and thus it falls out that <code>g3</code> must be <code>1</code>.</p>
+</div></div></div><div><h2 class="subsection-heading" id="Import path">Import path</h2><div class="doc-block"><code>import semmle.python.essa.SsaCompute</code></div></div><div><h2 class="subsection-heading" id="Imports">Imports</h2><div class="doc-block"><table><tbody><tr><td><a href="../../../../python.qll/module.python.html" class="ref-link ref-module" title="Module python">python</a></td><td></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Predicates">Predicates</h2><div class="doc-block"><table><tbody><tr><td><a href="predicate.SsaCompute$phiIndex.0.html" class="ref-link ref-predicate" title="Predicate SsaCompute::phiIndex">phiIndex</a></td><td></td></tr><tr><td><a href="predicate.SsaCompute$piIndex.0.html" class="ref-link ref-predicate" title="Predicate SsaCompute::piIndex">piIndex</a></td><td></td></tr></tbody></table></div></div><div><h2 class="subsection-heading" id="Aliases">Aliases</h2><div class="doc-block"><table><tbody><tr><td><a href="module.SsaCompute$SsaComputeImpl$AdjacentUsesImpl.html" class="ref-link ref-module" title="Module SsaCompute::SsaComputeImpl::AdjacentUses">AdjacentUses</a></td><td></td></tr><tr><td><a href="module.SsaCompute$SsaComputeImpl$EssaDefinitionsImpl.html" class="ref-link ref-module" title="Module SsaCompute::SsaComputeImpl::EssaDefinitions">EssaDefinitions</a></td><td></td></tr><tr><td><a href="module.SsaCompute$SsaComputeImpl$LivenessImpl.html" class="ref-link ref-module" title="Module SsaCompute::SsaComputeImpl::Liveness">Liveness</a></td><td></td></tr><tr><td><a href="module.SsaCompute$SsaComputeImpl$SsaDefinitionsImpl.html" class="ref-link ref-module" title="Module SsaCompute::SsaComputeImpl::SsaDefinitions">SsaDefinitions</a></td><td></td></tr></tbody></table></div></div></div></div></div><footer id="content-footer">Copyright 2020 GitHub Software UK Ltd.<a title="Privacy statement and tracking preferences" target="_blank" href="https://docs.github.com/github/site-policy/github-privacy-statement">Privacy Statement</a></footer></body></html>
