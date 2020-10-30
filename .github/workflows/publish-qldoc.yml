@@ -24,17 +24,16 @@ jobs:
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
     - name: Move artifacts 
-      run: mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries/** && rm -r artifact
+      run: mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries/ && rm -r artifact
     - name: Unzip artifacts
       working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
-      run: |    
-        ls -la;
-        unzip pack-cpp-qloc.zip -d cpp;
-        unzip pack-csharp-qloc.zip -d csharp;
-        unzip pack-go-qloc.zip -d go;
-        unzip pack-java-qloc.zip -d java;
-        unzip pack-javascript-qloc.zip -d javascript;
-        unzip pack-python-qloc.zip -d python;
+      run: |
+        unzip pack-cpp-qloc.zip -d cpp && rm -r pack-cpp-qldoc.zip;
+        unzip pack-csharp-qloc.zip -d csharp && rm -r pack-csharp-qldoc.zip;
+        unzip pack-go-qloc.zip -d go && rm -r pack-go-qldoc.zip;
+        unzip pack-java-qloc.zip -d java && rm -r pack-java-qldoc.zip;
+        unzip pack-javascript-qloc.zip -d javascript && rm -r pack-javascript-qldoc.zip;
+        unzip pack-python-qloc.zip -d python && rm -r pack-python-qldoc.zip;
         rm -r pack-ql-qldoc.zip
     - name: Check files 
       working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
