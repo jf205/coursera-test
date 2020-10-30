@@ -45,6 +45,10 @@ Options
    source files for this database. In some output formats, files will be
    referred to by their relative path from this directory.
 
+.. option:: --[no-]allow-missing-source-root
+
+   [Advanced] Proceed even if the specified source root does not exist.
+
 Extractor selection options
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

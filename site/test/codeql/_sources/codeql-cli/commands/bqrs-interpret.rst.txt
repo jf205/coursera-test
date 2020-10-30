@@ -42,11 +42,11 @@ Options
    option is not suitable for use in automation as it will produce
    different versions of SARIF between different CodeQL versions.
 
-   ``sarif-v1``: SARIF v1.0.0.
+   ``sarifv1``: SARIF v1.0.0.
 
-   ``sarif-v2``: SARIF v2.0.0 (Committee Specification Draft 1).
+   ``sarifv2``: SARIF v2.0.0 (Committee Specification Draft 1).
 
-   ``sarif-v2.1.0``: SARIF v2.1.0.
+   ``sarifv2.1.0``: SARIF v2.1.0.
 
    ``graphtext``: A textual format representing a graph. Only compatible
    with queries with @kind graph.
