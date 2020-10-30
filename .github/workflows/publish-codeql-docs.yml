@@ -27,7 +27,7 @@ jobs:
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
     - name: Move artifact 
-      run: mv artifact/** '${{ github.event.inputs.destination }}' && rm artifact
+      run: mv artifact/** '${{ github.event.inputs.destination }}' && rm -r artifact
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
