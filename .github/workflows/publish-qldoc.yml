@@ -39,7 +39,7 @@ jobs:
         unzip pack-python-qldoc.zip -d python && rm -r pack-python-qldoc.zip;
         rm -r pack-ql-qldoc.zip
     - name: Check files 
-      working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
+      working-directory: ${{ github.event.inputs.destination }}/codeql-libraries
       run: ls -la
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
