@@ -44,7 +44,8 @@ You must specify:
 
 - ``--format``: the format of the results file generated during analysis. A
   number of different formats are supported, including CSV, :ref:`SARIF
-  <sarif-file>`, and graph formats. To find out which other results formats are
+  <sarif-file>`, and graph formats. For more information about CSV and SARIF,
+  see `Results <#results>`__. To find out which other results formats are
   supported, see the :doc:`database analyze reference
   <../commands/database-analyze>`.
 
@@ -160,6 +161,7 @@ A SARIF results file is generated. Specifying ``--format=sarif-latest`` ensures
 that the results are formatted according to the most recent SARIF specification
 supported by CodeQL.
 
+
 Results
 -------
 
@@ -169,8 +171,8 @@ and CSV.
 The SARIF format is designed to represent the output of a broad range of static
 analysis tools. For more information, see :doc:`SARIF overview <../reference/sarif-overview>`.
 
-If you choose to generate results as CSV, the output will contain the following information for
-each alert:
+If you choose to generate results in CSV format, then each line in the output file
+corresponds to an alert. Each line is a comma-separated list with the following information:
 
 .. list-table::
    :header-rows: 1
