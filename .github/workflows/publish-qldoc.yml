@@ -29,13 +29,13 @@ jobs:
       run: |
         mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries && rm -r artifact;
         cd '${{ github.event.inputs.destination }}'/codeql-libraries;
-        mv pack-cpp-qldoc cpp;
-        mv pack-csharp-qldoc csharp;
-        mv pack-go-qldoc go;
-        mv pack-java-qldoc java;
-        mv pack-javascript-qldoc javascript;
-        mv pack-python-qldoc python;
-        rm -r pack-ql-qldoc
+        mv pack-cpp-qldoc.zip cpp;
+        mv pack-csharp-qldoc.zip csharp;
+        mv pack-go-qldoc.zip go;
+        mv pack-java-qldoc.zip java;
+        mv pack-javascript-qldoc.zip javascript;
+        mv pack-python-qldoc.zip python;
+        rm -r pack-ql-qldoc.zip
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
