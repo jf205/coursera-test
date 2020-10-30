@@ -114,10 +114,7 @@ To remove queries from the Query History view, select all the queries you want t
 Viewing query results
 -----------------------
 
-#. Click a query in the Query History view to display its results in the Results view. Alternatively, right-click the result to select a different view:
-
-   - To view the results in `SARIF format <https://help.semmle.com/codeql/codeql-cli/reference/sarif-overview.html>`__, right-click and select **View SARIF**.
-   - To view the results in `DIL format <https://help.semmle.com/codeql/advanced-glossary.html#dil>`__, right-click and select **View DIL**.
+#. Click a query in the Query History view to display its results in the Results view. Alternatively, to view the results as "`SARIF output <https://help.semmle.com/codeql/codeql-cli/reference/sarif-overview.html>`__," right-click and select **View SARIF**.
 
 #. Use the dropdown menu in the Results view to choose which results to display, and in what form to display them, such as a formatted alert message or a table of raw results. The available output forms are specified by the format of the query and the metadata. For more information, see "`CodeQL queries <https://help.semmle.com/QL/learn-ql/writing-queries/writing-queries.html>`__."
 

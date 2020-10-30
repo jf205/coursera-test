@@ -44,11 +44,8 @@ Options
 
 .. option:: --working-dir=<dir>
 
-   [Advanced] The directory in which the specified command should be
-   executed. If this argument is not provided, the command is executed in
-   the value of ``--source-root`` passed to :doc:`codeql database create
-   <database-create>`, if one exists. If no ``--source-root`` argument is
-   provided, the command is executed in the current working directory.
+   The directory in which the specified command should be executed. If
+   not specified, it defaults to the current working directory.
 
 .. option:: --no-tracing
 
@@ -57,10 +54,11 @@ Options
 
 .. option:: --compiler-spec=<spec-file>
 
-   [Advanced] The path to a compiler specification file. It may be used
-   to pick out compiler processes that run as part of the build command,
-   and trigger the execution of other tools. The extractors will provide
-   default compiler specifications that should work in most situations.
+   The path to a compiler specification file. It may be used to pick out
+   compiler processes that run as part of the build command, and trigger
+   the execution of other tools. By default, no compilers are recognized,
+   which means that the command is responsible for creating TRAP files
+   directly.
 
 Common options
 ~~~~~~~~~~~~~~
