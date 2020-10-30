@@ -25,6 +25,9 @@ jobs:
         repo: github/semmle-code 
     - name: Move artifacts 
       run: mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries/ && rm -r artifact
+    - name: check artifacts
+      working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
+      run: ls -la
     - name: Unzip artifacts
       working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
       run: |
