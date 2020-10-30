@@ -1,4 +1,4 @@
-name: Download and publish CodeQL standard libraries
+name: Publish QLDoc
 on:
   workflow_dispatch:
     inputs:
@@ -23,8 +23,17 @@ jobs:
         workflow: __docs-generate-qldoc.yml
         branch: '${{ github.event.inputs.download_branch }}'
         repo: github/semmle-code 
-    - name: Move artifact 
-      run: mv artifact/** ${{ github.event.inputs.destination }}/codeql-libraries && rm -r artifact
+    - name: Move and rename artifacts 
+      run: |
+        mv artifact/** '${{ github.event.inputs.destination }}'/codeql-libraries && rm -r artifact;
+        cd '${{ github.event.inputs.destination }}'/codeql-libraries;
+        mv pack-cpp-qldoc cpp;
+        mv pack-csharp-qldoc csharp;
+        mv pack-go-qldoc go;
+        mv pack-java-qldoc java;
+        mv pack-javascript-qldoc javascript;
+        mv pack-python-qldoc python;
+        rm -r pack-ql-qldoc
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with:
