@@ -28,12 +28,12 @@ jobs:
     - name: Unzip artifacts
       working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
       run: |
-        unzip pack-cpp-qloc.zip -d cpp && rm -r pack-cpp-qldoc.zip;
-        unzip pack-csharp-qloc.zip -d csharp && rm -r pack-csharp-qldoc.zip;
-        unzip pack-go-qloc.zip -d go && rm -r pack-go-qldoc.zip;
-        unzip pack-java-qloc.zip -d java && rm -r pack-java-qldoc.zip;
-        unzip pack-javascript-qloc.zip -d javascript && rm -r pack-javascript-qldoc.zip;
-        unzip pack-python-qloc.zip -d python && rm -r pack-python-qldoc.zip;
+        unzip pack-cpp-qldoc.zip -d cpp && rm -r pack-cpp-qldoc.zip;
+        unzip pack-csharp-qldoc.zip -d csharp && rm -r pack-csharp-qldoc.zip;
+        unzip pack-go-qldoc.zip -d go && rm -r pack-go-qldoc.zip;
+        unzip pack-java-qldoc.zip -d java && rm -r pack-java-qldoc.zip;
+        unzip pack-javascript-qldoc.zip -d javascript && rm -r pack-javascript-qldoc.zip;
+        unzip pack-python-qldoc.zip -d python && rm -r pack-python-qldoc.zip;
         rm -r pack-ql-qldoc.zip
     - name: Check files 
       working-directory: ${{ github.event.inputs.destination }}'/codeql-libraries
