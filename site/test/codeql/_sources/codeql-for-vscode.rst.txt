@@ -14,10 +14,13 @@ See the following help topics for more information:
   <codeql-for-vscode/procedures/setting-up>`: You can install and configure 
   the CodeQL extension in Visual Studio Code.
 
-
 - :doc:`Analyzing your projects
   <codeql-for-vscode/procedures/using-extension>`: You can run queries on CodeQL
   databases and view the results in Visual Studio Code.
+
+- :doc:`Exploring the structure of your source code
+  <codeql-for-vscode/procedures/exploring-the-structure-of-your-source-code>`: 
+  You can use the AST viewer to display the abstract syntax tree of a CodeQL database.
 
 - :doc:`Exploring data flow with path queries
   <codeql-for-vscode/procedures/exploring-paths>`: You can run CodeQL queries in
@@ -43,6 +46,7 @@ See the following help topics for more information:
    codeql-for-vscode/procedures/about-codeql-for-vscode
    codeql-for-vscode/procedures/setting-up
    codeql-for-vscode/procedures/using-extension
+   codeql-for-vscode/procedures/exploring-the-structure-of-your-source-code
    codeql-for-vscode/procedures/exploring-paths
    codeql-for-vscode/procedures/testing-queries
    codeql-for-vscode/reference/settings
